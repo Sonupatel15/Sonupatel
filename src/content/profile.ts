@@ -323,7 +323,7 @@ export const skills = [
   },
   {
     category: "CI/CD",
-    items: ["GitLab CI", "GitHub Actions"],
+    items: ["GitHub Actions"],
   },
   {
     category: "Data and machine learning",
