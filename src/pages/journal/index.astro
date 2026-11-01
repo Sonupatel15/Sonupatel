@@ -1,0 +1,47 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Icon from "@/components/Icon.astro";
+import { journalMilestones } from "@/content/profile";
+import { formatPostDate, getPublishedEntries } from "@/lib/posts";
+
+const entries = await getPublishedEntries("journal");
+---
+
+<BaseLayout title="Journal" description="Milestones and personal writing by Sonupatel A L.">
+  <main class="page container" id="main-content" tabindex="-1">
+    <header class="page-header prose">
+      <h1>Journal</h1>
+    </header>
+    <section aria-labelledby="highlights-title">
+      <h2 id="highlights-title">Milestones</h2>
+      <ol class="highlights-list">
+        {journalMilestones.map((highlight) => (
+          <li id={highlight.id}>
+            <p class="meta"><time datetime={highlight.date.value}>{highlight.date.label}</time></p>
+            <h3>{highlight.href ? <a href={highlight.href}>{highlight.title}</a> : highlight.title}</h3>
+            {highlight.details.length > 0 && (
+              <ul class="milestone-details">
+                {highlight.details.map((detail) => <li>{detail}</li>)}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ol>
+    </section>
+    {entries.length > 0 && (
+      <section class="content-section" aria-labelledby="journal-entries">
+        <h2 id="journal-entries">Entries</h2>
+        <div class="post-list">
+          {entries.map((post) => (
+            <article class="post-card">
+              <p class="meta"><time datetime={post.data.published.toISOString()}>{formatPostDate(post.data.published)}</time></p>
+              <h3><a href={`/journal/${post.id}/`}>{post.data.title}</a></h3>
+              <p>{post.data.summary}</p>
+              <a class="social-action" href={`/journal/${post.id}/`}>Read entry <Icon name="external" size={16} /></a>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+  </main>
+</BaseLayout>

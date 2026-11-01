@@ -1,0 +1,37 @@
+{
+  "name": "sonupatel",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "npm@12.0.2",
+  "engines": {
+    "node": ">=24.22.1 <25"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "postbuild": "npm run check:export",
+    "check:export": "node scripts/check-static-export.mjs",
+    "lint": "eslint . --max-warnings=0",
+    "test": "node --test scripts/theme.test.mjs scripts/profile.test.mjs",
+    "typecheck": "astro check",
+    "prepreview": "npm run check:export",
+    "preview": "wrangler dev --local",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "dependencies": {
+    "astro": "7.4.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24",
+    "eslint": "^10.14.0",
+    "eslint-plugin-astro": "^3.2.1",
+    "eslint-plugin-jsx-a11y-x": "^0.2.0",
+    "globals": "^17.13.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.72.1",
+    "wrangler": "^4.156.0"
+  }
+}

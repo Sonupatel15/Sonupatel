@@ -1,0 +1,42 @@
+---
+import Email from "@/assets/icons/envelope.svg";
+import GitHub from "@/assets/icons/github.svg";
+import LinkedIn from "@/assets/icons/linkedin.svg";
+import Resume from "@/assets/icons/file-earmark-pdf.svg";
+import External from "@/assets/icons/arrow-up-right.svg";
+import X from "@/assets/icons/twitter-x.svg";
+import Instagram from "@/assets/icons/instagram.svg";
+import LeetCode from "@/assets/icons/leetcode.svg";
+import CodeChef from "@/assets/icons/codechef.svg";
+import HackerRank from "@/assets/icons/hackerrank.svg";
+import Printer from "@/assets/icons/printer.svg";
+import Substack from "@/assets/icons/substack.svg";
+import Medium from "@/assets/icons/medium.svg";
+import Link from "@/assets/icons/link-45deg.svg";
+
+const icons = {
+  email: Email, github: GitHub, linkedin: LinkedIn, resume: Resume, external: External,
+  x: X, instagram: Instagram, leetcode: LeetCode, codechef: CodeChef, hackerrank: HackerRank, printer: Printer,
+  substack: Substack, medium: Medium, link: Link,
+};
+
+const brands = new Set(["github", "linkedin", "x", "instagram", "leetcode", "codechef", "hackerrank", "substack", "medium"]);
+interface Props {
+  name: keyof typeof icons;
+  size?: number;
+}
+
+const { name, size }: Props = Astro.props;
+const iconSize = size ?? (brands.has(name) ? 24 : 20);
+const Svg = icons[name];
+---
+
+<Svg
+  width={iconSize}
+  height={iconSize}
+  preserveAspectRatio="xMidYMid meet"
+  fill="currentColor"
+  class={`action-icon action-icon--${name}${brands.has(name) ? " brand-icon" : ""}`}
+  aria-hidden="true"
+  focusable="false"
+/>

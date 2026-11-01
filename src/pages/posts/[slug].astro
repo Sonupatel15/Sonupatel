@@ -1,0 +1,22 @@
+---
+import { render } from "astro:content";
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Article from "@/components/Article.astro";
+import { getPublishedPosts } from "@/lib/posts";
+
+export const getStaticPaths = (async () => {
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={post.data.title} description={post.data.summary}>
+  <main class="page container" id="main-content" tabindex="-1">
+    <Article post={post}><Content /></Article>
+  </main>
+</BaseLayout>

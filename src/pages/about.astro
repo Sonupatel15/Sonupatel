@@ -1,0 +1,98 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Portrait from "@/components/Portrait.astro";
+import Icon from "@/components/Icon.astro";
+import { currentRole, educationHistory, experience, profile, skills } from "@/content/profile";
+---
+
+<BaseLayout
+  title="About"
+  description="Sonupatel A L's engineering background, work experience, education and technical skills."
+>
+  <main class="page container" id="main-content" tabindex="-1">
+    <header class="page-header about-header">
+      <div class="prose">
+      <p class="eyebrow">Background</p>
+      <h1>About me</h1>
+      <p class="lead">I'm {profile.name}, an {currentRole.title.toLowerCase()} at {currentRole.company} in Bengaluru.</p>
+      <p>
+        I work on backend services, PostgreSQL high-availability systems and microservices in Go and Java.
+        My work focuses on keeping databases available and helping services communicate across Windows and Linux.
+      </p>
+      </div>
+      <div class="hero-portrait"><Portrait /></div>
+    </header>
+
+    <section class="content-section" aria-labelledby="experience-title">
+      <h2 id="experience-title">Experience</h2>
+      <div class="experience-list">
+        {experience.map((role) => (
+          <article class="experience-row" id={`experience-${role.id}`}>
+            <div>
+              <h3>{role.company}</h3>
+              <p class="meta">
+                <time datetime={role.start.value}>{role.start.label}</time> to{" "}
+                {role.end ? <time datetime={role.end.value}>{role.end.label}</time> : "present"}
+              </p>
+              <div class="work-meta meta">
+                {role.arrangement && <span>{role.arrangement}</span>}
+                {role.location && <span>{role.location}</span>}
+              </div>
+            </div>
+            <div class="prose">
+              <p class="role-title">{role.title}</p>
+              {role.summary && <p>{role.summary}</p>}
+              {role.responsibilities.length > 0 && (
+                <ul class="bullet-list">
+                  {role.responsibilities.map((responsibility) => <li>{responsibility}</li>)}
+                </ul>
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="content-section" aria-labelledby="skills-title">
+      <h2 id="skills-title">Technical skills</h2>
+      <dl class="skill-groups">
+        {skills.map((group) => (
+          <div>
+            <dt>{group.category}</dt>
+            <dd>{group.items.join(", ")}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="content-section" aria-labelledby="education-title">
+      <h2 id="education-title">Education</h2>
+      <div class="education-list">
+        {educationHistory.map((education) => (
+          <article class="education-row" id={education.id}>
+            <div>
+              <h3>{education.institution}</h3>
+              <p>{education.qualification}</p>
+              <p class="meta">
+                <time datetime={education.start.value}>{education.start.label}</time> to{" "}
+                <time datetime={education.end.value}>{education.end.label}</time>
+              </p>
+            </div>
+            <div class="prose">
+              <ul class="bullet-list education-results">
+                {education.details.map((detail) => <li>{detail}</li>)}
+              </ul>
+              {education.coursework && (
+                <div class="education-coursework">
+                  <p class="role-title">Relevant coursework</p>
+                  <p>{education.coursework.join(", ")}.</p>
+                </div>
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+    <p class="page-end-link"><a class="social-action" href="/journal/">Highlights and journal <Icon name="external" size={16} /></a></p>
+  </main>
+</BaseLayout>

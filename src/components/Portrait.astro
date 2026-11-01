@@ -1,0 +1,24 @@
+---
+import { profile } from "@/content/profile";
+
+interface Props {
+  priority?: boolean;
+}
+const { priority = false }: Props = Astro.props;
+---
+
+<picture class="portrait-frame">
+  <source
+    srcset="/images/headshot-256.webp 256w, /images/headshot-512.webp 512w"
+    sizes="(max-width: 40rem) 128px, 256px"
+  />
+  <img
+    src="/images/headshot-512.webp"
+    width="512"
+    height="512"
+    alt={`Head-and-shoulders portrait of ${profile.name}`}
+    loading="eager"
+    fetchpriority={priority ? "high" : "auto"}
+    decoding="async"
+  />
+</picture>

@@ -1,0 +1,71 @@
+---
+import ThemeControl from "@/components/ThemeControl.astro";
+import Icon from "@/components/Icon.astro";
+import { currentRole, footerSocialLinks, profile } from "@/content/profile";
+import { themeInitializationScript } from "@/lib/theme";
+import "@/styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = `${profile.name}, an ${currentRole.title.toLowerCase()} at ${currentRole.company} in Bengaluru, working on backend services, database high availability and microservices.` }: Props = Astro.props;
+const pageTitle = title
+  ? `${title} | ${profile.name}`
+  : `${profile.name} | ${currentRole.title}`;
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+const navigation = [
+  { href: "/about/", label: "About" },
+  { href: "/posts/", label: "Posts" },
+  { href: "/journal/", label: "Journal" },
+  { href: "/projects/", label: "Projects" },
+  { href: "/resume/", label: "Resume" },
+  { href: "/contact/", label: "Contact" },
+];
+---
+
+<!doctype html>
+<html lang="en" data-theme="system">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline id="theme-initialization" set:html={themeInitializationScript}></script>
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={profile.name} />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header container">
+      <a class="site-brand" href="/" aria-label={`${profile.name} home`}>
+        <span>{profile.name}</span>
+      </a>
+      <nav class="site-navigation" aria-label="Main navigation">
+        {navigation.map((link) => (
+          <a
+            href={link.href}
+            aria-current={currentPath === link.href.replace(/\/$/, "") || currentPath.startsWith(link.href) ? "page" : undefined}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+      <ThemeControl />
+    </header>
+    <slot />
+    <footer class="site-footer container">
+      <div class="footer-heading">
+        <div>
+          <p class="footer-name">{profile.name}</p>
+          <p class="meta">{currentRole.title} at {currentRole.company}</p>
+        </div>
+        <nav class="link-list" aria-label="Footer links">
+          {footerSocialLinks.map((link) => <a class="social-action footer-social" href={link.href}><Icon name={link.icon} size={18} />{link.label}</a>)}
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

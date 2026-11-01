@@ -1,0 +1,97 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Icon from "@/components/Icon.astro";
+import Portrait from "@/components/Portrait.astro";
+import { currentRole, featuredSocialLinks, profile, projects } from "@/content/profile";
+---
+
+<BaseLayout>
+  <main class="home-page" id="main-content" tabindex="-1">
+    <section class="hero container" aria-labelledby="page-title">
+      <div class="intro">
+        <h1 id="page-title">Hi, I'm {profile.name}.</h1>
+        <p class="lead">{profile.introduction}</p>
+        <p class="location">{profile.location}</p>
+        <div class="hero-actions">
+          <a class="button-link icon-link" href="/resume/">
+            <Icon name="resume" />
+            View resume
+          </a>
+          <a class="social-action" href={`mailto:${profile.email}`}>
+            <Icon name="email" />Email me
+          </a>
+          {featuredSocialLinks.map((link) => (
+            <a class="social-action" href={link.href}>
+              <Icon name={link.icon} />{link.label}
+            </a>
+          ))}
+        </div>
+      </div>
+      <div class="hero-portrait">
+        <Portrait priority />
+      </div>
+    </section>
+
+    <section class="profile-background container" aria-labelledby="current-work-title">
+      <article class="current-work">
+        <div>
+          <p class="eyebrow">Current work</p>
+          <h2 id="current-work-title">{currentRole.company}</h2>
+          <p class="role-title">{currentRole.title}</p>
+          <p class="meta">
+            <time datetime={currentRole.start.value}>{currentRole.start.label}</time> to present
+          </p>
+          <p class="meta">{currentRole.arrangement}</p>
+        </div>
+        <div>
+          <p>{currentRole.summary}</p>
+          <a class="social-action work-link" href="/about/">More about my work <Icon name="external" size={16} /></a>
+        </div>
+      </article>
+    </section>
+
+    <section class="home-section container" aria-labelledby="selected-work-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Selected work</p>
+          <h2 id="selected-work-title">Projects</h2>
+        </div>
+        <a class="social-action" href="/projects/">All project details <Icon name="external" size={16} /></a>
+      </div>
+      <div class="project-grid">
+        {projects.map((project) => (
+          <article class="project-card">
+            <p class="meta">{project.category}</p>
+            <h3><a href={`/projects/#${project.id}`}>{project.title}</a></h3>
+            <p>{project.summary}</p>
+            <ul class="tag-list" aria-label={`${project.title} technologies`}>
+              {project.technologies.slice(0, 3).map((technology) => <li>{technology}</li>)}
+            </ul>
+            <a class="social-action card-link" href={`/projects/#${project.id}`}>
+              View project<span class="visually-hidden">: {project.title}</span>
+              <Icon name="external" size={16} />
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="contact-strip container" aria-labelledby="writing-title">
+      <div>
+        <p class="eyebrow">Writing</p>
+        <h2 id="writing-title">Posts and notes</h2>
+        <p>Read my articles and find my writing on Substack, Medium and X.</p>
+      </div>
+      <a class="social-action" href="/posts/"><Icon name="link" />Read my posts <Icon name="external" size={16} /></a>
+    </section>
+
+    <section class="contact-strip container" aria-labelledby="contact-title">
+      <div>
+        <p class="eyebrow">Contact</p>
+        <h2 id="contact-title">Get in touch</h2>
+        <p>Email me or find the rest of my profiles.</p>
+      </div>
+      <a class="button-link" href="/contact/">Contact and profiles</a>
+    </section>
+  </main>
+</BaseLayout>
