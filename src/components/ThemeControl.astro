@@ -1,0 +1,86 @@
+---
+import { getServerThemePreference, themeOptions } from "@/lib/theme";
+
+const initialPreference = getServerThemePreference();
+---
+
+<div class="theme-control">
+  <label class="theme-picker" data-theme-picker hidden>
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      aria-hidden="true"
+    >
+      <path d="M12 3a9 9 0 1 0 0 18V3Z" />
+      <circle cx="12" cy="12" r="9" />
+    </svg>
+    <span class="visually-hidden">Color theme</span>
+    <select data-theme-select>
+      {themeOptions.map((option) => (
+        <option value={option.value} selected={option.value === initialPreference}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+  </label>
+</div>
+<p class="theme-notice" id="theme-notice" role="status" hidden></p>
+
+<script>
+  import {
+    getThemePreference,
+    isThemePreference,
+    restoreSavedThemePreference,
+    saveThemePreference,
+    subscribeToTheme,
+  } from "@/lib/theme";
+
+  const selector = document.querySelector<HTMLSelectElement>("[data-theme-select]");
+  const picker = document.querySelector<HTMLLabelElement>("[data-theme-picker]");
+  const notice = document.querySelector<HTMLParagraphElement>("#theme-notice");
+  if (!selector || !picker || !notice) {
+    throw new Error("Theme controls are missing from the page.");
+  }
+
+  function synchronizeSelection() {
+    if (selector) {
+      selector.value = getThemePreference();
+    }
+  }
+
+  synchronizeSelection();
+  subscribeToTheme(synchronizeSelection);
+  selector.addEventListener("change", () => {
+    const value = selector.value;
+    if (!isThemePreference(value)) {
+      console.error("Unrecognized theme option:", value);
+      notice.textContent = "Choose Light, Dark, or System to change the theme.";
+      notice.hidden = false;
+      selector.setAttribute("aria-describedby", "theme-notice");
+      return;
+    }
+    const saved = saveThemePreference(value);
+    notice.textContent = saved
+      ? ""
+      : "Theme changed for now. Browser settings prevented saving your preference.";
+    notice.hidden = saved;
+    if (saved) {
+      selector.removeAttribute("aria-describedby");
+    } else {
+      selector.setAttribute("aria-describedby", "theme-notice");
+    }
+  });
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) {
+      restoreSavedThemePreference();
+    }
+    synchronizeSelection();
+    // History navigation can restore an old select value after the page's scripts.
+    requestAnimationFrame(synchronizeSelection);
+  });
+  picker.hidden = false;
+</script>

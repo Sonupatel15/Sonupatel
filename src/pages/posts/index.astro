@@ -1,0 +1,45 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Icon from "@/components/Icon.astro";
+import { publishingLinks } from "@/content/profile";
+import { formatPostDate, getPublishedPosts } from "@/lib/posts";
+
+const posts = await getPublishedPosts();
+---
+
+<BaseLayout title="Posts" description="Articles and short posts by Sonupatel A L, with links to Substack, Medium and X.">
+  <main class="page container" id="main-content" tabindex="-1">
+    <header class="page-header prose">
+      <p class="eyebrow">Writing</p>
+      <h1>Posts</h1>
+      <p class="lead">Articles, notes and links to where I write.</p>
+    </header>
+    <section aria-labelledby="published-posts">
+      <h2 id="published-posts">Articles</h2>
+      <div class="post-list">
+        {posts.map((post) => (
+          <article class="post-card">
+            <p class="meta"><time datetime={post.data.published.toISOString()}>{formatPostDate(post.data.published)}</time></p>
+            <h3><a href={`/posts/${post.id}/`}>{post.data.title}</a></h3>
+            <p>{post.data.summary}</p>
+            <div class="link-list">
+              <a class="social-action" href={`/posts/${post.id}/`}>Read post <Icon name="external" size={16} /></a>
+              {post.data.source && <a class="text-link icon-link" href={post.data.source.url}>Original on {post.data.source.label} <Icon name="external" size={16} /></a>}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+    <section class="content-section" aria-labelledby="writing-profiles">
+      <h2 id="writing-profiles">Where I write</h2>
+      <ul class="profile-grid">
+        {publishingLinks.map((link) => (
+          <li><a href={link.href}>
+            <span class="profile-card-heading"><Icon name={link.icon} /><span class="profile-name">{link.label}</span><Icon name="external" size={16} /></span>
+            <span class="meta">{link.description}</span>
+          </a></li>
+        ))}
+      </ul>
+    </section>
+  </main>
+</BaseLayout>

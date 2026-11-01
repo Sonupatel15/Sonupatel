@@ -1,0 +1,59 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Icon from "@/components/Icon.astro";
+import { projects } from "@/content/profile";
+---
+
+<BaseLayout
+  title="Projects"
+  description="Projects by Sonupatel A L covering profile analysis, metro ticketing, distributed task management and REST APIs."
+>
+  <main class="page container" id="main-content" tabindex="-1">
+    <header class="page-header prose">
+      <p class="eyebrow">Selected work</p>
+      <h1>Projects</h1>
+      <p class="lead">Work in backend services, microservices, distributed systems and data tooling.</p>
+    </header>
+
+    <div class="project-list">
+      {projects.map((project) => (
+        <article class="project-detail" id={project.id}>
+          <div class="project-detail-heading">
+            <p class="eyebrow">{project.category}</p>
+            <h2>{project.title}</h2>
+            {project.period && <p class="meta">{project.period}</p>}
+            {project.collaboration && <p class="meta">{project.collaboration}</p>}
+          </div>
+          <div class="project-detail-body">
+            <p class="project-summary">{project.summary}</p>
+            {project.problem && (
+              <div class="project-purpose">
+                <h3>Purpose</h3>
+                <p>{project.problem}</p>
+              </div>
+            )}
+            <h3 class="project-subheading">Implementation</h3>
+            <ul class="bullet-list">
+              {project.details.map((detail) => <li>{detail}</li>)}
+            </ul>
+            <h3 class="project-subheading">Tools and source</h3>
+            <ul class="tag-list" aria-label={`${project.title} technologies`}>
+              {project.technologies.map((technology) => <li>{technology}</li>)}
+            </ul>
+            {project.links.length > 0 && (
+              <div class="link-list project-links">
+                {project.links.map((link) => (
+                  <a class="social-action" href={link.href}>
+                    <Icon name="github" size={18} />{link.label}<Icon name="external" size={16} />
+                  </a>
+                ))}
+              </div>
+            )}
+            {project.note && <p class="project-note meta">{project.note}</p>}
+          </div>
+        </article>
+      ))}
+    </div>
+    <p class="page-end-link"><a class="social-action" href="/contact/">Contact me about my work <Icon name="external" size={16} /></a></p>
+  </main>
+</BaseLayout>

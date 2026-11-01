@@ -1,0 +1,27 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Icon from "@/components/Icon.astro";
+import { formatPostDate } from "@/lib/posts";
+
+interface Props {
+  post: CollectionEntry<"posts">;
+}
+const { post } = Astro.props;
+const section = post.data.section;
+---
+
+<article class="article-content">
+  <header class="page-header">
+    <a class="text-link icon-link" href={`/${section}/`}>{section === "journal" ? "Journal" : "All posts"} <Icon name="external" size={16} /></a>
+    <h1>{post.data.title}</h1>
+    <p class="meta"><time datetime={post.data.published.toISOString()}>{formatPostDate(post.data.published)}</time></p>
+    <p class="lead">{post.data.summary}</p>
+    <ul class="tag-list" aria-label="Post topics">{post.data.tags.map((tag) => <li>{tag}</li>)}</ul>
+  </header>
+  <div class="post-body"><slot /></div>
+  {post.data.source && (
+    <p class="page-end-link"><a class="social-action" href={post.data.source.url}>
+      <Icon name="link" />Original on {post.data.source.label} <Icon name="external" size={16} />
+    </a></p>
+  )}
+</article>

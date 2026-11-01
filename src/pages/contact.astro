@@ -1,0 +1,66 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Icon from "@/components/Icon.astro";
+import { profile, resume, socialLinks } from "@/content/profile";
+
+const priority = new Map<string, number>([["linkedin", 0], ["github", 1]]);
+const profiles = [...socialLinks].sort(
+  (a, b) => (priority.get(a.icon) ?? 2) - (priority.get(b.icon) ?? 2),
+);
+---
+
+<BaseLayout title="Contact" description="Email and professional, coding and social profiles for Sonupatel A L.">
+  <main class="page container" id="main-content" tabindex="-1">
+    <header class="page-header prose">
+      <p class="eyebrow">Contact</p>
+      <h1>Get in touch</h1>
+      <p class="lead">For questions about my work, email me or connect on LinkedIn.</p>
+    </header>
+
+    <section class="contact-actions" aria-label="Email and resume">
+      <a class="contact-action-card" href={`mailto:${profile.email}`}>
+        <span class="action-badge"><Icon name="email" size={28} /></span>
+        <div>
+          <h2>Email me</h2>
+          <p class="contact-address">{profile.email}</p>
+          <span class="contact-action-label">Write an email <Icon name="external" size={16} /></span>
+        </div>
+      </a>
+      <article class="contact-action-card">
+        <span class="action-badge"><Icon name="resume" size={28} /></span>
+        <div>
+          <h2>Resume</h2>
+          <p>Read my resume online or download the PDF.</p>
+          <div class="contact-resume-links">
+            <a class="social-action" href="/resume/">View resume <Icon name="external" size={16} /></a>
+            <a class="social-action" href={resume.href} download={resume.fileName}>
+              <Icon name="resume" size={18} />{resume.downloadLabel}
+            </a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="content-section" aria-labelledby="profiles-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="profiles-title">Profiles</h2>
+        </div>
+      </div>
+      <ul class="profile-grid">
+        {profiles.map((link) => (
+          <li>
+            <a href={link.href}>
+              <span class="profile-card-heading">
+                <Icon name={link.icon} />
+                <span class="profile-name">{link.label}</span>
+                <Icon name="external" size={16} />
+              </span>
+              <span class="meta">{link.description}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </main>
+</BaseLayout>

@@ -1,0 +1,107 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Icon from "@/components/Icon.astro";
+import { currentRole, educationHistory, experience, profile, projects, resume, resumeSocialLinks, skills } from "@/content/profile";
+---
+
+<BaseLayout title="Resume" description="Resume for Sonupatel A L, with experience, education, skills, a PDF download and print options.">
+  <main class="page resume-page container" id="main-content" tabindex="-1">
+    <header class="resume-heading">
+      <p class="eyebrow">Resume</p>
+      <h1>{profile.name}</h1>
+      <p class="lead">{currentRole.title}</p>
+      <div class="resume-contact">
+        <a href={`mailto:${profile.email}`}>{profile.email}</a>
+        <a href={resume.phoneHref}>{resume.phone}</a>
+        <span>{profile.location}</span>
+      </div>
+      <div class="resume-actions">
+        <a class="button-link icon-link" href={resume.href} download={resume.fileName}>
+          <Icon name="resume" />{resume.downloadLabel}
+        </a>
+        <button class="social-action" type="button" data-print-resume hidden><Icon name="printer" />Print or save as PDF</button>
+      </div>
+    </header>
+
+    <section class="resume-section" aria-labelledby="resume-experience">
+      <h2 id="resume-experience">Experience</h2>
+      {experience.map((role) => (
+        <article class="resume-entry">
+          <div class="resume-entry-heading">
+            <div><h3>{role.company}</h3><p class="role-title">{role.title}</p></div>
+            <p class="meta">
+              <time datetime={role.start.value}>{role.start.label}</time> to{" "}
+              {role.end ? <time datetime={role.end.value}>{role.end.label}</time> : "present"}
+            </p>
+          </div>
+          {(role.resumeDetails ?? role.responsibilities).length > 0 && (
+            <ul class="bullet-list">
+              {(role.resumeDetails ?? role.responsibilities).map((detail) => <li>{detail}</li>)}
+            </ul>
+          )}
+        </article>
+      ))}
+    </section>
+
+    <section class="resume-section" aria-labelledby="resume-projects">
+      <h2 id="resume-projects">Projects</h2>
+      {projects.map((project) => (
+        <article class="resume-entry">
+          <div class="resume-entry-heading">
+            <h3>{project.title}</h3>
+            {project.period && <p class="meta">{project.period}</p>}
+          </div>
+          <ul class="bullet-list">{project.details.map((detail) => <li>{detail}</li>)}</ul>
+          <p class="meta resume-stack">{project.technologies.join(", ")}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="resume-section" aria-labelledby="resume-education">
+      <h2 id="resume-education">Education</h2>
+      {educationHistory.map((education) => (
+        <article class="resume-entry">
+          <div class="resume-entry-heading">
+            <h3>{education.institution}</h3>
+            <p class="meta">
+              <time datetime={education.start.value}>{education.start.label}</time> to{" "}
+              <time datetime={education.end.value}>{education.end.label}</time>
+            </p>
+          </div>
+          <p>{education.qualification}</p>
+          <ul class="bullet-list">
+            {education.details.map((detail) => <li>{detail}</li>)}
+          </ul>
+          {education.coursework && (
+            <p class="resume-coursework">Relevant coursework: {education.coursework.join(", ")}.</p>
+          )}
+        </article>
+      ))}
+    </section>
+
+    <section class="resume-section" aria-labelledby="resume-skills">
+      <h2 id="resume-skills">Technical skills</h2>
+      <dl class="resume-skills">
+        {skills.map((group) => (
+          <div><dt>{group.category}</dt><dd>{group.items.join(", ")}</dd></div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="resume-section" aria-labelledby="resume-profiles">
+      <h2 id="resume-profiles">Profiles</h2>
+      <div class="link-list">
+        {resumeSocialLinks.map((link) => <a class="social-action" href={link.href}><Icon name={link.icon} size={18} />{link.label}</a>)}
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<script>
+  const printButton = document.querySelector<HTMLButtonElement>("[data-print-resume]");
+  if (!printButton) {
+    throw new Error("Resume print control is missing.");
+  }
+  printButton.addEventListener("click", () => window.print());
+  printButton.hidden = false;
+</script>
