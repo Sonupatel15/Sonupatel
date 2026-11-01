@@ -121,7 +121,7 @@ test("retains the analyzer project and uses the owner's simple PDF download labe
   assert.equal(analyzer.links[0].label, "Repository");
   assert.equal(experience.find((role) => role.id === "hal").summary, undefined);
   assert.equal(experience.find((role) => role.id === "hal").location, "Bengaluru, India");
-  assert.deepEqual(skills.find((group) => group.category === "CI/CD").items, ["GitLab CI", "GitHub Actions"]);
+  assert.deepEqual(skills.find((group) => group.category === "CI/CD").items, ["GitHub Actions"]);
   assert.ok(socialLinks.some((link) => link.href === "https://sonupatelal.substack.com/"));
   assert.ok(socialLinks.some((link) => link.href === "https://medium.com/@sonupatelal"));
   assert.equal(resume.downloadLabel, "Download PDF");
